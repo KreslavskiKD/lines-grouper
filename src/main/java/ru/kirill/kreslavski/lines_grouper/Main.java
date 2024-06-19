@@ -2,7 +2,10 @@ package ru.kirill.kreslavski.lines_grouper;
 
 import ru.kirill.kreslavski.lines_grouper.grouper.Grouper;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
@@ -24,6 +27,17 @@ public class Main {
             throw new RuntimeException(e);
         }
 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("results.txt", true))){
 
+            BufferedWriter log = new BufferedWriter(new OutputStreamWriter(System.out));
+
+
+            grouper.writeStats(log);
+
+
+        } catch (IOException e) {
+            System.out.println("Problem writing in file: " + e.getLocalizedMessage());
+            throw new RuntimeException(e);
+        }
     }
 }

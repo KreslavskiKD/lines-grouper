@@ -1,16 +1,56 @@
 package ru.kirill.kreslavski.lines_grouper.grouper;
 
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Grouper {
 
     private int currentLineNumber;
     private HashMap<String, Node> map;
+    private List<String> lines;
 
     public Grouper() {
         currentLineNumber = 0;
         map = new HashMap<>();
+        lines = new ArrayList<>();
+    }
+
+    public void writeStats(BufferedWriter buff) throws IOException {
+        HashMap<Node, Set<Integer>> groups = new HashMap<>();
+
+        for (Node n : map.values()) {
+            Node group = findSet(n);
+            if (!groups.containsKey(group)) {
+                if (group.rank > 1) {
+                    groups.put(n, n.lineNumbers);
+                }
+            } else {
+                groups.get(group).addAll(group.lineNumbers);
+            }
+        }
+
+        List<Node> sorted = groups.keySet().stream()
+                .filter((Node a) -> groups.get(a).size() > 1)
+                .sorted(Comparator.comparingInt((Node a) -> -a.rank))
+                .toList();
+
+        buff.write("" + sorted.size());
+        buff.newLine();
+
+        int i = 1;
+        for (Node n : sorted) {
+            buff.write("Группа " + i);
+            buff.newLine();
+            for (Integer num : groups.get(n)) {
+                buff.write(lines.get(num));
+                buff.newLine();
+            }
+            buff.newLine();
+            i++;
+        }
     }
 
     public void consume(String line) {
@@ -87,6 +127,7 @@ public class Grouper {
             union(nodes.get(0), newNodes.get(0));
         }
 
+        lines.add(line);
         currentLineNumber++;
     }
 
