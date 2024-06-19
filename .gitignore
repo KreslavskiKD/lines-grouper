@@ -40,3 +40,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### For Tests ###
+lng.txt
+lng-4.txt.gz
