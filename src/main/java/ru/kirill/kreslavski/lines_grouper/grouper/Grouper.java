@@ -24,18 +24,18 @@ public class Grouper {
         for (Node n : map.values()) {
             Node group = findSet(n);
             if (!groups.containsKey(group)) {
-                if (group.rank > 1) {
-                    groups.put(n, n.lineNumbers);
-                }
+ //               if (group.lineNumbers.size() > 1) {
+                    groups.put(group, n.lineNumbers);
+ //               }
             } else {
-                groups.get(group).addAll(group.lineNumbers);
+                groups.get(group).addAll(n.lineNumbers);
             }
         }
 
         List<Node> sorted = groups.keySet().stream()
                 .filter((Node a) -> groups.get(a).size() > 1)
                 .sorted(Comparator.comparingInt((Node a) -> -a.rank))
-                .toList();
+                .collect(Collectors.toList());
 
         buff.write("" + sorted.size());
         buff.newLine();
@@ -55,13 +55,13 @@ public class Grouper {
 
     public void consume(String line) {
         int column = 0;
-        List<String> list = Arrays.stream(line.split(";")).toList();
+        List<String> list = Arrays.stream(line.split(";")).collect(Collectors.toList());
         List<Node> nodes = new ArrayList<>();
         List<Node> newNodes = new ArrayList<>();
 
         for (String l : list) {
             // Check if the substring is empty
-            if (l.isEmpty()) {
+            if (l == null || l.isEmpty()) {
                 column++;
                 continue;
             }
@@ -86,10 +86,10 @@ public class Grouper {
                 return;
             }
 
-            Set initialSet = new HashSet(nodes.get(0).lineNumbers);
+            Set<Integer> initialSet = new HashSet(nodes.get(0).lineNumbers);
 
             for (int i = 1; i < nodes.size(); i++) {
-                initialSet.removeAll(nodes.get(i).lineNumbers);
+                initialSet.retainAll(nodes.get(i).lineNumbers);
             }
 
             if (!initialSet.isEmpty()) {

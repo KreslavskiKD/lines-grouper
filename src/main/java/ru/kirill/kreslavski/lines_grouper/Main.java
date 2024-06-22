@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 public class Main {
     public static void main(String[] args) {
         if (args.length != 1) {
-            System.out.println("Required exactly one argument: file name");
-            return;
+            System.err.println("Required exactly one argument: file name");
+            throw new IllegalArgumentException("Required exactly one argument: file name");
         }
 
         String fileName = args[0];
@@ -32,7 +32,7 @@ public class Main {
             BufferedWriter log = new BufferedWriter(new OutputStreamWriter(System.out));
 
 
-            grouper.writeStats(log);
+            grouper.writeStats(writer);
 
 
         } catch (IOException e) {
