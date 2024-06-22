@@ -24,9 +24,7 @@ public class Grouper {
         for (Node n : map.values()) {
             Node group = findSet(n);
             if (!groups.containsKey(group)) {
- //               if (group.lineNumbers.size() > 1) {
-                    groups.put(group, n.lineNumbers);
- //               }
+                groups.put(group, n.lineNumbers);
             } else {
                 groups.get(group).addAll(n.lineNumbers);
             }

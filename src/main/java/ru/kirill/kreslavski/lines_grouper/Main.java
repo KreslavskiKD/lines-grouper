@@ -28,13 +28,7 @@ public class Main {
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("results.txt", true))){
-
-            BufferedWriter log = new BufferedWriter(new OutputStreamWriter(System.out));
-
-
             grouper.writeStats(writer);
-
-
         } catch (IOException e) {
             System.out.println("Problem writing in file: " + e.getLocalizedMessage());
             throw new RuntimeException(e);
